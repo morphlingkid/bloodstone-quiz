@@ -2,33 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
+      "src": "build/**",
+      "use": "@vercel/static"
     },
     {
-      "src": "server.js",
+      "src": "api/save-result.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/auth",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/save-result",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/oauth2callback",
-      "dest": "/server.js"
+      "src": "/api/save-result",
+      "dest": "/api/save-result.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/build/$1"
+      "dest": "/build/index.html"
     }
   ]
 }
