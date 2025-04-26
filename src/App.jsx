@@ -72,6 +72,7 @@ function App() {
     }
   }, [gameStarted, gameOver, saveResultToGoogleSheets]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     scoreRef.current = score; // Обновляем scoreRef при изменении score
   }, [score]);
