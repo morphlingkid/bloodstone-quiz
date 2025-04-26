@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { questionsDota } from './questionsDota';
 import catImage from './assets/cute-cat.jpg';
@@ -7,7 +7,6 @@ import successSound from './assets/success.mp3';
 
 function App() {
   const [score, setScore] = useState(0);
-  const scoreRef = useRef(score); // Храним актуальный score
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameOver, setGameOver] = useState(false);
@@ -46,9 +45,9 @@ function App() {
       const timer = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 0) {
-            console.log('Таймер истёк, завершаем квиз, score=', scoreRef.current);
+            console.log('Таймер истёк, завершаем квиз, score=', score);
             setGameOver(true);
-            saveResultToGoogleSheets(scoreRef.current); // Используем scoreRef
+            saveResultToGoogleSheets(score); // Используем score напрямую
             clearInterval(timer);
             return 0;
           }
@@ -70,12 +69,7 @@ function App() {
         clearInterval(heartInterval);
       };
     }
-  }, [gameStarted, gameOver, saveResultToGoogleSheets]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    scoreRef.current = score; // Обновляем scoreRef при изменении score
-  }, [score]);
+  }, [gameStarted, gameOver, saveResultToGoogleSheets, score]);
 
   const startGame = () => {
     if (!userName.trim()) {
