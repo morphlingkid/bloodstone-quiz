@@ -22,7 +22,7 @@ function App() {
     const dateTime = new Date().toISOString();
     console.log('Отправка результата:', { name: userName, score: currentScore, dateTime });
     try {
-      const response = await fetch('/save-result', {
+      const response = await fetch('/api/save-result', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: userName, score: currentScore, dateTime }),
@@ -47,7 +47,7 @@ function App() {
           if (prev <= 0) {
             console.log('Таймер истёк, завершаем квиз, score=', score);
             setGameOver(true);
-            saveResultToGoogleSheets(score); // Используем score напрямую
+            saveResultToGoogleSheets(score);
             clearInterval(timer);
             return 0;
           }

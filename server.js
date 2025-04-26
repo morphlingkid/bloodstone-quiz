@@ -2,7 +2,7 @@ const express = require('express');
 const { google } = require('googleapis');
 
 const app = express();
-const port = process.env.PORT || 3000; // Это чтобы сервер работал на Vercel
+const port = process.env.PORT || 3000;
 
 // Настраиваем Google Sheets API с секретиками
 const credentials = {
@@ -21,9 +21,6 @@ const tokens = {
 };
 oAuth2Client.setCredentials(tokens);
 
-const sheets = google.sheets({ version: 'v4', auth: oAuth2Client });
-const spreadsheetId = '1MJPzSjXdG37m6T3RN_ZwfpBltJBYDQm3vx8gbB24VNM';
-
 app.use(express.json());
 app.use(express.static('build')); // Это чтобы твоя игра загружалась
 
@@ -38,27 +35,6 @@ app.get('/oauth2callback', async (req, res) => {
   } catch (error) {
     console.error('Ошибка OAuth:', error);
     res.status(500).send('Ошибка авторизации, попробуй снова, милашка! 🐾');
-  }
-});
-
-// Этот кусочек сохраняет результаты в Google Sheets
-app.post('/save-result', async (req, res) => {
-  const { name, score, dateTime } = req.body;
-  console.log('Получен запрос /save-result:', { name, score, dateTime });
-  try {
-    await sheets.spreadsheets.values.append({
-      spreadsheetId,
-      range: 'Sheet1!A:C',
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [[name, score, dateTime]],
-      },
-    });
-    console.log('Данные записаны в Google Sheets!');
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Ошибка записи в Google Sheets:', error);
-    res.status(500).json({ success: false, error: 'Не удалось сохранить результат, милашка! 🐾' });
   }
 });
 
